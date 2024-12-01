@@ -1,4 +1,4 @@
-import { addTasks, getAllTasks, getConfigDetails, updateConfigQuery } from "../db/query.js";
+import { addTasks, getAllTasks, getConfigDetails, updateActiveStatus, updateConfigQuery } from "../db/query.js";
 import { toCompleteAllTasks } from "../utils/queue-management-main.js";
 
 const taskController = {
@@ -48,12 +48,15 @@ const taskController = {
                 const allTasks = await getAllTasks()
                 if (allTasks && allTasks.length > 0) {
                     const taskQueue = allTasks;
-                    toCompleteAllTasks(taskQueue, configDetails?.max_concurrent_tasks)
+                    await updateActiveStatus()
+                    await toCompleteAllTasks(taskQueue, configDetails?.max_concurrent_tasks)
+                    return res.status(200).json({ message: 'completed' })
                 } else {
                     // no more tasks left
+                    return res.status(404).json({ message: 'All tasks are completed please add more tasks' })
                 }
             }
-
+            return res.status(500).json({ message: 'Something went wrong...' })
 
             //changing the status of tasks
         } catch (err) {

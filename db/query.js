@@ -61,7 +61,7 @@ export const getAllTasks = async () => {
 export const updateActiveStatus = async (id) => {
     const updateTaskStatus = async () => {
         const result = await sql`
-        UPDATE public.tasks SET active=false WHERE id=${id} 
+        UPDATE public.tasks SET active=false WHERE active=true 
         `;
         return result
     }

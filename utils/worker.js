@@ -7,6 +7,7 @@ parentPort.on('message', (task) => {
             parentPort.postMessage({ success: true, task });
         })
         .catch((error) => {
+            console.log(error,'error came');
             parentPort.postMessage({ success: false, task, error: error.message });
         });
 });
@@ -20,7 +21,7 @@ async function process(task) {
             }, Math.random() * 2000);
         } else {
             setTimeout(() => {
-                reject(new Error(`Failed to process task: ${task.type}`));
+                reject(new Error(`Unknown task type: ${task.type}`));
             }, Math.random() * 2000);
         }
     });
